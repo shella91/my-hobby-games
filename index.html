@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hobby Hero - English Grade 3 (Chapter 5)</title>
+    <!-- Tailwind CSS untuk tata letak responsif -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tone.js untuk efek suara & melodi lagu tanpa aset eksternal -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+    <!-- Google Fonts: Fredoka (ramah anak) & Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Fredoka', sans-serif;
+            background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+            user-select: none;
+            overflow-x: hidden;
+        }
+
+        /* Animasi Kustom untuk Game Anak */
+        @keyframes bounceSlow {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        .animate-bounce-slow {
+            animation: bounceSlow 2.5s infinite ease-in-out;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(250, 204, 21, 0.7); transform: scale(1); }
+            50% { box-shadow: 0 0 20px 8px rgba(250, 204, 21, 0.9); transform: scale(1.05); }
+        }
+        .scaffolding-glow {
+            animation: pulseGlow 1.2s infinite;
+            border-color: #facc15 !important;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+        .animate-shake {
+            animation: shake 0.4s ease-in-out;
+        }
+
+        /* Gaya Tombol 3D Khas Game */
+        .btn-game {
+            transition: all 0.15s ease;
+            box-shadow: 0 6px 0 rgba(0,0,0,0.2);
+        }
+        .btn-game:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 rgba(0,0,0,0.2);
+        }
+
+        /* Kartu Flashcard */
+        .hobby-card {
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .hobby-card:hover {
+            transform: translateY(-5px) scale(1.02);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-between p-3 sm:p-6 text-slate-800">
+
+    <!-- HEADER / TOP HUD -->
+    <header class="w-full max-w-4xl bg-white/90 backdrop-blur-md rounded-3xl p-4 shadow-lg flex flex-wrap items-center justify-between gap-3 border-4 border-white">
+        <div class="flex items-center gap-3">
+            <div class="w-12 h-12 bg-amber-400 rounded-2xl flex items-center justify-center text-2xl shadow-inner">
+                🏆
+            </div>
+            <div>
+                <h1 class="text-xl sm:text-2xl font-bold text-indigo-700 leading-tight">Hobby Hero</h1>
+                <p class="text-xs sm:text-sm text-slate-500 font-medium" id="chapter-title">Chapter 5 - My Hobby</p>
+            </div>
+        </div>
+
+        <!-- Skor & Navigasi -->
+        <div class="flex items-center gap-3">
+            <div class="bg-amber-100 px-4 py-2 rounded-2xl border-2 border-amber-300 flex items-center gap-2">
+                <span class="text-xl">⭐</span>
+                <span class="font-bold text-amber-700 text-lg" id="score-display">0</span>
+            </div>
+            <button onclick="showScreen('menu')" id="btn-home" class="hidden btn-game bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold px-4 py-2 rounded-2xl text-sm sm:text-base">
+                🏠 Menu
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN GAME CONTAINER -->
+    <main class="w-full max-w-4xl flex-grow flex items-center justify-center my-4">
+
+        <!-- 1. MAIN MENU SCREEN -->
+        <section id="screen-menu" class="w-full bg-white/95 rounded-3xl p-6 sm:p-8 shadow-xl border-4 border-white text-center">
+            <div class="mb-6">
+                <span class="inline-block bg-indigo-100 text-indigo-700 px-4 py-1 rounded-full text-sm font-bold mb-2">
+                    Bahasa Inggris Kelas III • Fase B
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-bold text-slate-800 mb-2">What Do You Like Doing?</h2>
+                <p class="text-slate-600 max-w-lg mx-auto">Pilih misi belajar di bawah ini! Dengarkan suaranya dan perhatikan ekspresi <span class="text-xl">😊</span> (Like) atau <span class="text-xl">🙁</span> (Don't like).</p>
+            </div>
+
+            <!-- Pilihan Level sesuai RPP -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 mb-6">
+                <!-- Level 1 -->
+                <div onclick="startLevel(1)" class="hobby-card cursor-pointer bg-gradient-to-b from-sky-400 to-blue-500 rounded-3xl p-6 text-white shadow-lg border-4 border-sky-200 flex flex-col items-center justify-between">
+                    <div class="text-5xl mb-3 animate-bounce-slow">🎧</div>
+                    <div>
+                        <span class="bg-white/20 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Stage 1</span>
+                        <h3 class="text-2xl font-bold mt-1">Listen & Check</h3>
+                        <p class="text-sky-100 text-sm mt-2">Dengarkan kalimat hobi dan tangkap kartu gambar yang tepat!</p>
+                    </div>
+                    <button class="mt-4 w-full btn-game bg-white text-blue-600 font-bold py-2.5 rounded-2xl">Mainkan ▶</button>
+                </div>
+
+                <!-- Level 2 -->
+                <div onclick="startLevel(2)" class="hobby-card cursor-pointer bg-gradient-to-b from-pink-400 to-rose-500 rounded-3xl p-6 text-white shadow-lg border-4 border-pink-200 flex flex-col items-center justify-between">
+                    <div class="text-5xl mb-3 animate-bounce-slow" style="animation-delay: 0.3s;">🎤</div>
+                    <div>
+                        <span class="bg-white/20 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Stage 2</span>
+                        <h3 class="text-2xl font-bold mt-1">My Hobby Song</h3>
+                        <p class="text-pink-100 text-sm mt-2">Bernyanyi bersama dan lengkapi lirik lagu dengan gerakan TPR!</p>
+                    </div>
+                    <button class="mt-4 w-full btn-game bg-white text-rose-600 font-bold py-2.5 rounded-2xl">Bernyanyi 🎵</button>
+                </div>
+
+                <!-- Level 3 -->
+                <div onclick="startLevel(3)" class="hobby-card cursor-pointer bg-gradient-to-b from-emerald-400 to-teal-500 rounded-3xl p-6 text-white shadow-lg border-4 border-emerald-200 flex flex-col items-center justify-between">
+                    <div class="text-5xl mb-3 animate-bounce-slow" style="animation-delay: 0.6s;">💬</div>
+                    <div>
+                        <span class="bg-white/20 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Stage 3</span>
+                        <h3 class="text-2xl font-bold mt-1">Pair Dialogue</h3>
+                        <p class="text-emerald-100 text-sm mt-2">Susun kalimat jawaban dari pertanyaan temanmu!</p>
+                    </div>
+                    <button class="mt-4 w-full btn-game bg-white text-teal-600 font-bold py-2.5 rounded-2xl">Berlatih 🗣️</button>
+                </div>
+            </div>
+
+            <!-- Kamus Flashcard Mini (BKoF / Pengenalan Kosakata) -->
+            <div class="bg-slate-50 rounded-2xl p-4 border-2 border-slate-200">
+                <p class="text-sm font-bold text-slate-500 mb-3">🔊 Klik kartu di bawah untuk mendengar pengucapan kosakata:</p>
+                <div id="vocab-preview-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
+                    <!-- Diisi otomatis via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. STAGE 1: LISTEN & CHECK -->
+        <section id="screen-level1" class="hidden w-full bg-white/95 rounded-3xl p-6 shadow-xl border-4 border-white">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-4 pb-3 border-b-2 border-slate-100">
+                <span class="bg-blue-100 text-blue-700 font-bold px-4 py-1.5 rounded-full text-sm">
+                    Stage 1: Listen & Check (<span id="l1-progress">1/5</span>)
+                </span>
+                <button onclick="replayCurrentAudio(0.75)" class="btn-game bg-amber-400 hover:bg-amber-500 text-slate-900 font-bold px-4 py-1.5 rounded-full text-sm flex items-center gap-1">
+                    🐢 Dengarkan Pelan (Hint)
+                </button>
+            </div>
+
+            <!-- Panel Pertanyaan & Audio -->
+            <div class="bg-sky-50 rounded-3xl p-5 mb-6 border-2 border-sky-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-4">
+                    <button onclick="replayCurrentAudio(1.0)" class="btn-game w-16 h-16 bg-blue-500 hover:bg-blue-600 text-white rounded-2xl flex items-center justify-center text-3xl shrink-0">
+                        🔊
+                    </button>
+                    <div>
+                        <p class="text-sm font-bold text-blue-600" id="l1-question-text">"What do you like doing?"</p>
+                        <h3 class="text-xl sm:text-2xl font-bold text-slate-800 mt-1" id="l1-prompt-hint">Klik tombol speaker untuk mendengar!</h3>
+                    </div>
+                </div>
+                <div id="l1-feedback-badge" class="hidden px-4 py-2 rounded-2xl font-bold text-white text-center"></div>
+            </div>
+
+            <!-- Grid Pilihan Kartu (Kombinasi Hobi + Ekspresi 😊/🙁) -->
+            <div id="l1-options-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                <!-- Diisi otomatis via JS -->
+            </div>
+        </section>
+
+        <!-- 3. STAGE 2: MY HOBBY SONG (KARAOKE & TPR) -->
+        <section id="screen-level2" class="hidden w-full bg-white/95 rounded-3xl p-6 shadow-xl border-4 border-white text-center">
+            <div class="flex items-center justify-between mb-4 pb-3 border-b-2 border-slate-100">
+                <span class="bg-rose-100 text-rose-700 font-bold px-4 py-1.5 rounded-full text-sm">
+                    Stage 2: My Hobby Song (TPR Sing Along)
+                </span>
+                <button onclick="playSongMelody()" id="btn-sing-song" class="btn-game bg-rose-500 hover:bg-rose-600 text-white font-bold px-5 py-2 rounded-full text-sm flex items-center gap-2">
+                    🎵 Nyanyikan Bait Ini
+                </button>
+            </div>
+
+            <!-- Karakter Animasi TPR -->
+            <div class="bg-gradient-to-b from-rose-50 to-amber-50 rounded-3xl p-6 mb-6 border-2 border-rose-200">
+                <div id="tpr-character" class="text-7xl sm:text-8xl mb-3 transition-transform duration-300 inline-block">
+                    🕺
+                </div>
+                <p id="tpr-instruction" class="text-sm font-bold text-rose-600 uppercase tracking-wide mb-4">
+                    Gerakan TPR: Pegang mikrofon imajiner & bergoyang!
+                </p>
+
+                <!-- Kotak Lirik Karaoke -->
+                <div class="bg-white rounded-2xl p-5 shadow-inner border-2 border-rose-100 max-w-xl mx-auto space-y-2 text-lg sm:text-xl font-bold text-slate-700">
+                    <p id="lyric-line-1" class="transition-colors duration-200">"What do you like doing? What do you like doing?"</p>
+                    <p id="lyric-line-2" class="transition-colors duration-200">"Tell me now, tell me now."</p>
+                    <p id="lyric-line-3" class="text-indigo-700 text-xl sm:text-2xl py-2 bg-indigo-50 rounded-xl px-3">
+                        "I <span id="song-slot-1" class="underline decoration-wavy text-rose-600">[ ... ]</span> playing football; 
+                        I <span id="song-slot-2" class="underline decoration-wavy text-rose-600">[ ... ]</span> dancing."
+                    </p>
+                    <p id="lyric-line-4" class="transition-colors duration-200">"How about you? How about you?"</p>
+                </div>
+            </div>
+
+            <!-- Kontrol Interaktif Lirik -->
+            <div id="l2-controls" class="max-w-lg mx-auto">
+                <p class="font-bold text-slate-600 mb-3" id="l2-task-prompt">Lengkapi lirik lagu! Pilih simbol yang sesuai untuk bait ini:</p>
+                <div class="grid grid-cols-2 gap-4">
+                    <button onclick="checkSongAnswer('like')" class="btn-game bg-emerald-400 hover:bg-emerald-500 text-white p-4 rounded-2xl font-bold text-xl flex flex-col items-center">
+                        <span class="text-4xl mb-1">😊</span>
+                        <span>I like</span>
+                    </button>
+                    <button onclick="checkSongAnswer('dislike')" class="btn-game bg-amber-400 hover:bg-amber-500 text-slate-900 p-4 rounded-2xl font-bold text-xl flex flex-col items-center">
+                        <span class="text-4xl mb-1">🙁</span>
+                        <span>I don't like</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. STAGE 3: PAIR WORK DIALOGUE BUILDER -->
+        <section id="screen-level3" class="hidden w-full bg-white/95 rounded-3xl p-6 shadow-xl border-4 border-white">
+            <div class="flex items-center justify-between mb-4 pb-3 border-b-2 border-slate-100">
+                <span class="bg-teal-100 text-teal-700 font-bold px-4 py-1.5 rounded-full text-sm">
+                    Stage 3: Pair Work Dialogue (<span id="l3-progress">1/5</span>)
+                </span>
+                <span class="text-sm font-bold text-slate-500">Susun balok kata!</span>
+            </div>
+
+            <!-- Skenario Dialog A & B (Sesuai LKPD Pertemuan 2) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center mb-6">
+                <!-- Flashcard Petunjuk -->
+                <div class="bg-teal-50 rounded-3xl p-6 border-4 border-teal-200 text-center relative">
+                    <div id="l3-emoji-badge" class="absolute -top-4 -right-4 w-16 h-16 bg-white rounded-full shadow-lg border-4 border-teal-300 flex items-center justify-center text-4xl">
+                        😊
+                    </div>
+                    <div id="l3-hobby-visual" class="w-32 h-32 mx-auto mb-3 flex items-center justify-center">
+                        <!-- SVG Ilustrasi Hobi -->
+                    </div>
+                    <span class="bg-white px-4 py-1 rounded-full font-bold text-teal-800 shadow-sm" id="l3-hobby-label">
+                        swimming
+                    </span>
+                </div>
+
+                <!-- Balon Percakapan -->
+                <div class="space-y-4">
+                    <!-- Student A -->
+                    <div class="bg-indigo-100 p-4 rounded-2xl rounded-tl-none border-2 border-indigo-200 flex items-center gap-3">
+                        <div class="text-3xl">🧒</div>
+                        <div>
+                            <p class="text-xs font-bold text-indigo-600 uppercase">Friend (Student A)</p>
+                            <p class="font-bold text-slate-800 text-lg" id="l3-question">"What do you like doing?"</p>
+                        </div>
+                        <button onclick="speakText(document.getElementById('l3-question').innerText)" class="ml-auto bg-white p-2 rounded-xl shadow text-indigo-600">🔊</button>
+                    </div>
+
+                    <!-- Student B (Area Jawaban Pemain) -->
+                    <div class="bg-emerald-50 p-4 rounded-2xl rounded-tr-none border-2 border-emerald-300">
+                        <p class="text-xs font-bold text-emerald-700 uppercase mb-2">You (Student B) - Klik kata di bawah:</p>
+                        <div id="l3-sentence-slot" class="min-h-[56px] bg-white rounded-xl p-2 border-2 border-dashed border-emerald-400 flex flex-wrap items-center gap-2">
+                            <span class="text-slate-400 text-sm italic px-2">Susun kalimatmu di sini...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bank Kata (Word Blocks) -->
+            <div class="bg-slate-100 p-4 rounded-2xl mb-4">
+                <div id="l3-word-bank" class="flex flex-wrap justify-center gap-3">
+                    <!-- Tombol kata diisi via JS -->
+                </div>
+            </div>
+
+            <!-- Tombol Aksi -->
+            <div class="flex justify-center gap-4">
+                <button onclick="resetSentenceBuilder()" class="btn-game bg-slate-300 hover:bg-slate-400 text-slate-800 font-bold px-6 py-3 rounded-2xl">
+                    🔄 Ulangi
+                </button>
+                <button onclick="checkDialogueAnswer()" class="btn-game bg-teal-500 hover:bg-teal-600 text-white font-bold px-8 py-3 rounded-2xl text-lg">
+                    Periksa Jawaban ✅
+                </button>
+            </div>
+        </section>
+
+        <!-- 5. REFLECTION & REWARD SCREEN (Sesuai Penutup RPP) -->
+        <section id="screen-reflection" class="hidden w-full bg-white/95 rounded-3xl p-6 sm:p-8 shadow-xl border-4 border-white text-center max-w-2xl">
+            <h2 class="text-3xl font-bold text-indigo-700 mb-2">Great Job, Hobby Hero! 🎉</h2>
+            <p class="text-slate-600 mb-4">Think about Your Learning (Refleksi Pembelajaran):</p>
+
+            <!-- Bintang Penghargaan (Rubrik Skor 1-3 RPP) -->
+            <div id="reflection-stars" class="flex justify-center gap-3 text-6xl my-4">
+                <span>⭐</span><span>⭐</span><span>⭐</span>
+            </div>
+            <p id="reflection-badge-text" class="font-bold text-lg text-amber-600 mb-6">
+                Mandiri & Akurat! (Skor 3/3)
+            </p>
+
+            <!-- Ceklis Refleksi Murid dari RPP -->
+            <div class="bg-indigo-50 rounded-2xl p-5 text-left space-y-3 mb-6 border-2 border-indigo-100">
+                <p class="font-bold text-indigo-900 text-sm uppercase tracking-wider">Pilih perasaan belajarmu hari ini:</p>
+                <label class="flex items-center gap-3 bg-white p-3 rounded-xl cursor-pointer border-2 border-transparent hover:border-indigo-300">
+                    <input type="radio" name="reflection" class="w-5 h-5 accent-indigo-600" checked>
+                    <span class="font-medium text-slate-700">😊 I can ask about my friend's hobby using <b>'What do you like doing?'</b></span>
+                </label>
+                <label class="flex items-center gap-3 bg-white p-3 rounded-xl cursor-pointer border-2 border-transparent hover:border-indigo-300">
+                    <input type="radio" name="reflection" class="w-5 h-5 accent-indigo-600">
+                    <span class="font-medium text-slate-700">🌟 I can say <b>'I like...'</b> and <b>'I don't like...'</b></span>
+                </label>
+                <label class="flex items-center gap-3 bg-white p-3 rounded-xl cursor-pointer border-2 border-transparent hover:border-indigo-300">
+                    <input type="radio" name="reflection" class="w-5 h-5 accent-indigo-600">
+                    <span class="font-medium text-slate-700">💪 I need more practice.</span>
+                </label>
+            </div>
+
+            <button onclick="showScreen('menu')" class="btn-game bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-8 py-3.5 rounded-2xl text-lg w-full sm:w-auto">
+                Kembali ke Menu Utama 🏠
+            </button>
+        </section>
+
+    </main>
+
+    <!-- CUSTOM TOAST MESSAGE (Pengganti alert()) -->
+    <div id="toast-box" class="fixed bottom-6 left-1/2 -translate-x-1/2 transform transition-all duration-300 opacity-0 pointer-events-none z-50">
+        <div id="toast-content" class="bg-slate-800 text-white font-bold px-6 py-3 rounded-full shadow-2xl text-base sm:text-lg flex items-center gap-2">
+            <span>✨</span> <span id="toast-text">Awesome!</span>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="text-center text-slate-700/80 text-xs sm:text-sm font-medium">
+        Interactive Learning Game • Bahasa Inggris Kelas III (Chapter 5: My Hobby)
+    </footer>
+
+    <script>
+        /**
+         * 1. DATA MATERI (Sesuai JSON yang diberikan user & RPP Pertemuan 2)
+         * Dilengkapi SVG Kustom agar visual tajam, ringan, dan bebas error broken image.
+         */
+        const GAME_DATA = {
+            "chapter": "Chapter 5 - My Hobby",
+            "questions": [
+                "What is your hobby?",
+                "What do you like doing?"
+            ],
+            "hobbies": [
+                {
+                    "id": "swimming",
+                    "label": "swimming",
+                    "emoji": "🏊‍♂️",
+                    "color": "bg-cyan-100 border-cyan-300",
+                    "svg": `<svg viewBox="0 0 100 100" class="w-full h-full"><circle cx="50" cy="50" r="45" fill="#bae6fd"/><path d="M10 65 Q 30 55, 50 65 T 90 65 L 90 90 L 10 90 Z" fill="#0284c7"/><circle cx="55" cy="40" r="12" fill="#fed7aa"/><path d="M30 55 Q 45 45, 65 55" stroke="#f97316" stroke-width="8" stroke-linecap="round" fill="none"/><path d="M10 75 Q 30 65, 50 75 T 90 75" stroke="#e0f2fe" stroke-width="4" fill="none"/></svg>`
+                },
+                {
+                    "id": "playing_football",
+                    "label": "playing football",
+                    "emoji": "⚽",
+                    "color": "bg-green-100 border-green-300",
+                    "svg": `<svg viewBox="0 0 100 100" class="w-full h-full"><circle cx="50" cy="50" r="45" fill="#bbf7d0"/><rect x="10" y="70" width="80" height="20" rx="5" fill="#16a34a"/><circle cx="50" cy="52" r="22" fill="#ffffff" stroke="#1e293b" stroke-width="3"/><polygon points="50,40 60,47 56,59 44,59 40,47" fill="#1e293b"/></svg>`
+                },
+                {
+                    "id": "dancing",
+                    "label": "dancing",
+                    "emoji": "💃",
+                    "color": "bg-fuchsia-100 border-fuchsia-300",
+                    "svg": `<svg viewBox="0 0 100 100" class="w-full h-full"><circle cx="50" cy="50" r="45" fill="#f5d0fe"/><circle cx="50" cy="28" r="10" fill="#fed7aa"/><path d="M50 38 L35 68 L65 68 Z" fill="#e11d48"/><path d="M35 45 Q 20 30, 25 20 M65 45 Q 80 30, 75 20" stroke="#fed7aa" stroke-width="5" stroke-linecap="round" fill="none"/><text x="72" y="45" font-size="18">🎶</text></svg>`
+                },
+                {
+                    "id": "singing",
+                    "label": "singing",
+                    "emoji": "🎤",
+                    "color": "bg-amber-100 border-amber-300",
+                    "svg": `<svg viewBox="0 0 100 100" class="w-full h-full"><circle cx="50" cy="50" r="45" fill="#fde68a"/><rect x="46" y="45" width="8" height="35" rx="4" fill="#334155"/><circle cx="50" cy="36" r="14" fill="#94a3b8" stroke="#475569" stroke-width="3"/><line x1="36" y1="36" x2="64" y2="36" stroke="#1e293b" stroke-width="3"/><text x="68" y="32" font-size="18">🎵</text><text x="20" y="42" font-size="16">🎶</text></svg>`
+                },
+                {
+                    "id": "reading_books",
+                    "label": "reading books",
+                    "emoji": "📚",
+                    "color": "bg-orange-100 border-orange-300",
+                    "svg": `<svg viewBox="0 0 100 100" class="w-full h-full"><circle cx="50" cy="50" r="45" fill="#fed7aa"/><path d="M20 35 Q 35 30, 50 38 Q 65 30, 80 35 L 80 72 Q 65 67, 50 75 Q 35 67, 20 72 Z" fill="#ffffff" stroke="#ea580c" stroke-width="4"/><line x1="50" y1="38" x2="50" y2="75" stroke="#ea580c" stroke-width="3"/></svg>`
+                },
+                {
+                    "id": "riding_bike",
+                    "label": "riding a bike",
+                    "emoji": "🚲",
+                    "color": "bg-indigo-100 border-indigo-300",
+                    "svg": `<svg viewBox="0 0 100 100" class="w-full h-full"><circle cx="50" cy="50" r="45" fill="#c7d2fe"/><circle cx="30" cy="65" r="14" fill="none" stroke="#1e293b" stroke-width="4"/><circle cx="70" cy="65" r="14" fill="none" stroke="#1e293b" stroke-width="4"/><path d="M30 65 L48 45 L65 45 L70 65 M48 45 L52 65 L30 65" fill="none" stroke="#ef4444" stroke-width="4" stroke-linejoin="round"/></svg>`
+                }
+            ],
+            "expressions": [
+                { "type": "like", "phrase": "I like", "emoji": "😊" },
+                { "type": "dislike", "phrase": "I don't like", "emoji": "🙁" }
+            ]
+        };
+
+        /**
+         * 2. STATE MANAGEMENT GAME
+         */
+        let gameState = {
+            score: 0,
+            currentLevel: 0,
+            round: 0,
+            maxRounds: 5,
+            wrongAttempts: 0, // Untuk memicu Scaffolding otomatis
+            usedHints: 0,
+            // State Level 1
+            l1Target: null,
+            // State Level 2
+            l2Step: 0,
+            // State Level 3
+            l3Target: null,
+            l3SelectedWords: []
+        };
+
+        /**
+         * 3. AUDIO ENGINE (Web Speech API + Tone.js Sound Effects)
+         */
+        function speakText(text, rate = 0.95) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-US';
+                utterance.rate = rate;
+                utterance.pitch = 1.1; // Nada sedikit ceria untuk anak-anak
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        // Efek suara menggunakan Tone.js
+        function playSfx(type) {
+            try {
+                if (Tone.context.state !== 'running') Tone.start();
+                const synth = new Tone.PolySynth(Tone.Synth).toDestination();
+                if (type === 'correct') {
+                    synth.triggerAttackRelease(["C5", "E5", "G5"], "8n");
+                } else if (type === 'wrong') {
+                    synth.triggerAttackRelease(["C3", "B2"], "8n");
+                } else if (type === 'click') {
+                    synth.triggerAttackRelease("G5", "32n");
+                }
+            } catch (e) {
+                console.warn("Audio context not ready yet");
+            }
+        }
+
+        function showToast(msg, isSuccess = true) {
+            const box = document.getElementById('toast-box');
+            const content = document.getElementById('toast-content');
+            const text = document.getElementById('toast-text');
+            
+            content.className = `${isSuccess ? 'bg-emerald-600' : 'bg-rose-600'} text-white font-bold px-6 py-3 rounded-full shadow-2xl text-base sm:text-lg flex items-center gap-2`;
+            text.innerText = msg;
+            box.classList.remove('opacity-0');
+            
+            setTimeout(() => {
+                box.classList.add('opacity-0');
+            }, 2000);
+        }
+
+        function updateScore(points) {
+            gameState.score += points;
+            document.getElementById('score-display').innerText = gameState.score;
+        }
+
+        /**
+         * 4. NAVIGASI LAYAR & INISIALISASI MENU
+         */
+        function showScreen(screenId) {
+            playSfx('click');
+            const screens = ['menu', 'level1', 'level2', 'level3', 'reflection'];
+            screens.forEach(s => {
+                document.getElementById(`screen-${s}`).classList.add('hidden');
+            });
+            document.getElementById(`screen-${screenId}`).classList.remove('hidden');
+
+            const btnHome = document.getElementById('btn-home');
+            if (screenId === 'menu') {
+                btnHome.classList.add('hidden');
+                window.speechSynthesis.cancel();
+            } else {
+                btnHome.classList.remove('hidden');
+            }
+        }
+
+        function initVocabPreview() {
+            const container = document.getElementById('vocab-preview-grid');
+            container.innerHTML = '';
+            GAME_DATA.hobbies.forEach(hobby => {
+                const btn = document.createElement('button');
+                btn.className = `hobby-card ${hobby.color} border-2 rounded-2xl p-2 flex flex-col items-center justify-center text-center shadow-sm`;
+                btn.innerHTML = `
+                    <div class="w-12 h-12 mb-1">${hobby.svg}</div>
+                    <span class="text-xs font-bold text-slate-700 leading-tight">${hobby.label}</span>
+                `;
+                btn.onclick = () => {
+                    playSfx('click');
+                    speakText(hobby.label);
+                };
+                container.appendChild(btn);
+            });
+        }
+
+        function startLevel(levelNum) {
+            gameState.currentLevel = levelNum;
+            gameState.round = 1;
+            gameState.wrongAttempts = 0;
+            gameState.usedHints = 0;
+
+            if (levelNum === 1) {
+                showScreen('level1');
+                setupLevel1Round();
+            } else if (levelNum === 2) {
+                showScreen('level2');
+                setupLevel2();
+            } else if (levelNum === 3) {
+                showScreen('level3');
+                setupLevel3Round();
+            }
+        }
+
+        /**
+         * 5. LOGIKA STAGE 1: LISTEN & CHECK
+         */
+        function setupLevel1Round() {
+            if (gameState.round > gameState.maxRounds) {
+                finishStage();
+                return;
+            }
+
+            document.getElementById('l1-progress').innerText = `${gameState.round}/${gameState.maxRounds}`;
+            gameState.wrongAttempts = 0;
+
+            // Pilih 1 hobi & 1 ekspresi target secara acak
+            const targetHobby = GAME_DATA.hobbies[Math.floor(Math.random() * GAME_DATA.hobbies.length)];
+            const targetExpr = GAME_DATA.expressions[Math.floor(Math.random() * GAME_DATA.expressions.length)];
+            const question = GAME_DATA.questions[Math.floor(Math.random() * GAME_DATA.questions.length)];
+
+            gameState.l1Target = {
+                hobby: targetHobby,
+                expr: targetExpr,
+                fullSentence: `${targetExpr.phrase} ${targetHobby.label}.`
+            };
+
+            document.getElementById('l1-question-text').innerText = `Q: "${question}"`;
+            document.getElementById('l1-prompt-hint').innerText = "Dengarkan jawabannya dan pilih kartu yang sesuai!";
+
+            // Buat 6 pilihan kartu (1 benar, 5 pengecoh)
+            let options = [gameState.l1Target];
+            while (options.length < 6) {
+                const randH = GAME_DATA.hobbies[Math.floor(Math.random() * GAME_DATA.hobbies.length)];
+                const randE = GAME_DATA.expressions[Math.floor(Math.random() * GAME_DATA.expressions.length)];
+                const exists = options.some(o => o.hobby.id === randH.id && o.expr.type === randE.type);
+                if (!exists) {
+                    options.push({
+                        hobby: randH,
+                        expr: randE,
+                        fullSentence: `${randE.phrase} ${randH.label}.`
+                    });
+                }
+            }
+            // Acak urutan kartu
+            options.sort(() => Math.random() - 0.5);
+
+            const grid = document.getElementById('l1-options-grid');
+            grid.innerHTML = '';
+            options.forEach((opt, idx) => {
+                const isCorrect = (opt.hobby.id === targetHobby.id && opt.expr.type === targetExpr.type);
+                const card = document.createElement('div');
+                card.id = `l1-card-${idx}`;
+                card.dataset.correct = isCorrect;
+                card.className = `hobby-card cursor-pointer bg-white border-4 ${opt.hobby.color} rounded-3xl p-4 shadow-md flex flex-col items-center relative`;
+                card.innerHTML = `
+                    <div class="absolute top-2 right-2 text-3xl bg-white rounded-full w-11 h-11 flex items-center justify-center shadow border-2 border-slate-100">
+                        ${opt.expr.emoji}
+                    </div>
+                    <div class="w-20 h-20 sm:w-24 sm:h-24 mb-2">${opt.hobby.svg}</div>
+                    <span class="font-bold text-slate-800 text-base sm:text-lg text-center">${opt.hobby.label}</span>
+                `;
+                card.onclick = () => handleLevel1Choice(card, isCorrect);
+                grid.appendChild(card);
+            });
+
+            // Putar audio otomatis setelah jeda singkat
+            setTimeout(() => replayCurrentAudio(0.95), 400);
+        }
+
+        function replayCurrentAudio(rate = 0.95) {
+            if (!gameState.l1Target) return;
+            if (rate < 0.9) gameState.usedHints++;
+            speakText(gameState.l1Target.fullSentence, rate);
+        }
+
+        function handleLevel1Choice(cardEl, isCorrect) {
+            if (isCorrect) {
+                playSfx('correct');
+                updateScore(20);
+                showToast(`Benar! "${gameState.l1Target.fullSentence}" 🎉`, true);
+                cardEl.classList.add('ring-4', 'ring-emerald-400', 'bg-emerald-50');
+                
+                setTimeout(() => {
+                    gameState.round++;
+                    setupLevel1Round();
+                }, 1300);
+            } else {
+                playSfx('wrong');
+                gameState.wrongAttempts++;
+                cardEl.classList.add('animate-shake', 'border-rose-500');
+                setTimeout(() => cardEl.classList.remove('animate-shake', 'border-rose-500'), 500);
+
+                // SCAFFOLDING OTOMATIS (Sesuai RPP jika murid butuh bantuan)
+                if (gameState.wrongAttempts >= 2) {
+                    gameState.usedHints++;
+                    showToast(`Petunjuk: Dengarkan pelan-pelan ya!`, false);
+                    replayCurrentAudio(0.7);
+                    // Beri efek glow pada kartu yang benar sebagai visual cue
+                    document.querySelectorAll('#l1-options-grid > div').forEach(el => {
+                        if (el.dataset.correct === 'true') el.classList.add('scaffolding-glow');
+                    });
+                } else {
+                    showToast(`Coba lagi! Perhatikan 😊 atau 🙁`, false);
+                    replayCurrentAudio(0.85);
+                }
+            }
+        }
+
+        /**
+         * 6. LOGIKA STAGE 2: MY HOBBY SONG (KARAOKE & TPR)
+         */
+        const SONG_VERSES = [
+            {
+                hobby1: "playing football",
+                hobby2: "dancing",
+                targetSlot: 1,
+                expected: "like", // "I like playing football"
+                prompt: "Lirik: 'I [ ... ] playing football' (Simbol: 😊)"
+            },
+            {
+                hobby1: "playing football",
+                hobby2: "dancing",
+                targetSlot: 2,
+                expected: "dislike", // "I don't like dancing"
+                prompt: "Lirik: 'I [ ... ] dancing' (Simbol: 🙁)"
+            },
+            {
+                hobby1: "swimming",
+                hobby2: "singing",
+                targetSlot: 1,
+                expected: "like",
+                prompt: "Bait 2: 'I [ ... ] swimming' (Simbol: 😊)"
+            }
+        ];
+
+        function setupLevel2() {
+            gameState.l2Step = 0;
+            renderSongStep();
+        }
+
+        function renderSongStep() {
+            if (gameState.l2Step >= SONG_VERSES.length) {
+                finishStage();
+                return;
+            }
+            const verse = SONG_VERSES[gameState.l2Step];
+            document.getElementById('l2-task-prompt').innerText = verse.prompt;
+            
+            const slot1Text = (verse.targetSlot === 1) ? "[ ... ]" : "like";
+            const slot2Text = (verse.targetSlot === 2) ? "[ ... ]" : "don't like";
+
+            document.getElementById('lyric-line-3').innerHTML = `
+                "I <span class="${verse.targetSlot === 1 ? 'bg-amber-200 px-2 rounded text-rose-600' : 'text-emerald-600'}">${slot1Text}</span> ${verse.hobby1}; 
+                I <span class="${verse.targetSlot === 2 ? 'bg-amber-200 px-2 rounded text-rose-600' : 'text-rose-600'}">${slot2Text}</span> ${verse.hobby2}."
+            `;
+        }
+
+        function playSongMelody() {
+            const verse = SONG_VERSES[gameState.l2Step];
+            const charEl = document.getElementById('tpr-character');
+            charEl.innerText = "🎤💃";
+            charEl.classList.add('scale-125');
+
+            // Memainkan melodi ceria dengan Tone.js
+            try {
+                if (Tone.context.state !== 'running') Tone.start();
+                const synth = new Tone.Synth().toDestination();
+                const now = Tone.now();
+                const notes = ["C4", "E4", "G4", "E4", "C4", "D4", "G4", "C5"];
+                notes.forEach((note, i) => {
+                    synth.triggerAttackRelease(note, "8n", now + i * 0.35);
+                });
+            } catch (e) {}
+
+            // Membacakan lirik lagu
+            const fullLyric = `What do you like doing? Tell me now! I like ${verse.hobby1}. I don't like ${verse.hobby2}. How about you?`;
+            speakText(fullLyric, 0.9);
+
+            setTimeout(() => {
+                charEl.classList.remove('scale-125');
+            }, 3000);
+        }
+
+        function checkSongAnswer(choice) {
+            const verse = SONG_VERSES[gameState.l2Step];
+            if (choice === verse.expected) {
+                playSfx('correct');
+                updateScore(25);
+                document.getElementById('tpr-character').innerText = "🌟🕺🌟";
+                showToast("Hebat! Yuk nyanyikan bait ini bersama!", true);
+                playSongMelody();
+
+                setTimeout(() => {
+                    gameState.l2Step++;
+                    renderSongStep();
+                }, 3800);
+            } else {
+                playSfx('wrong');
+                gameState.wrongAttempts++;
+                showToast("Ups! Perhatikan simbol 😊 (like) atau 🙁 (don't like)!", false);
+            }
+        }
+
+        /**
+         * 7. LOGIKA STAGE 3: PAIR WORK DIALOGUE BUILDER
+         */
+        function setupLevel3Round() {
+            if (gameState.round > gameState.maxRounds) {
+                finishStage();
+                return;
+            }
+
+            document.getElementById('l3-progress').innerText = `${gameState.round}/${gameState.maxRounds}`;
+            gameState.l3SelectedWords = [];
+
+            const targetHobby = GAME_DATA.hobbies[Math.floor(Math.random() * GAME_DATA.hobbies.length)];
+            const targetExpr = GAME_DATA.expressions[Math.floor(Math.random() * GAME_DATA.expressions.length)];
+
+            // Pecah menjadi blok kata sesuai struktur RPP (2-5 kata)
+            const expectedBlocks = (targetExpr.type === 'like')
+                ? ["I", "like", targetHobby.label]
+                : ["I", "don't like", targetHobby.label];
+
+            gameState.l3Target = {
+                hobby: targetHobby,
+                expr: targetExpr,
+                expectedBlocks: expectedBlocks,
+                fullSentence: expectedBlocks.join(" ") + "."
+            };
+
+            // Update UI Kartu Petunjuk
+            document.getElementById('l3-emoji-badge').innerText = targetExpr.emoji;
+            document.getElementById('l3-hobby-visual').innerHTML = targetHobby.svg;
+            document.getElementById('l3-hobby-label').innerText = targetHobby.label;
+
+            // Buat Bank Kata (Blok benar + pengecoh)
+            let wordBank = [...expectedBlocks];
+            const distractorExpr = (targetExpr.type === 'like') ? "don't like" : "like";
+            const otherHobby = GAME_DATA.hobbies.find(h => h.id !== targetHobby.id).label;
+            wordBank.push(distractorExpr, otherHobby);
+            wordBank.sort(() => Math.random() - 0.5);
+
+            const bankContainer = document.getElementById('l3-word-bank');
+            bankContainer.innerHTML = '';
+            wordBank.forEach(word => {
+                const btn = document.createElement('button');
+                btn.className = "btn-game bg-white hover:bg-indigo-50 text-indigo-800 border-2 border-indigo-200 font-bold px-5 py-2.5 rounded-2xl text-lg";
+                btn.innerText = word;
+                btn.onclick = () => addWordToSlot(word);
+                bankContainer.appendChild(btn);
+            });
+
+            renderSentenceSlot();
+            speakText("What do you like doing?");
+        }
+
+        function addWordToSlot(word) {
+            playSfx('click');
+            if (gameState.l3SelectedWords.length < 3) {
+                gameState.l3SelectedWords.push(word);
+                renderSentenceSlot();
+            }
+        }
+
+        function resetSentenceBuilder() {
+            playSfx('click');
+            gameState.l3SelectedWords = [];
+            renderSentenceSlot();
+        }
+
+        function renderSentenceSlot() {
+            const slot = document.getElementById('l3-sentence-slot');
+            if (gameState.l3SelectedWords.length === 0) {
+                slot.innerHTML = `<span class="text-slate-400 text-sm italic px-2">Susun kalimatmu di sini...</span>`;
+                return;
+            }
+            slot.innerHTML = '';
+            gameState.l3SelectedWords.forEach((word, index) => {
+                const pill = document.createElement('span');
+                pill.className = "bg-emerald-500 text-white font-bold px-4 py-1.5 rounded-xl shadow cursor-pointer hover:bg-rose-500";
+                pill.innerText = word;
+                pill.title = "Klik untuk menghapus";
+                pill.onclick = () => {
+                    gameState.l3SelectedWords.splice(index, 1);
+                    renderSentenceSlot();
+                };
+                slot.appendChild(pill);
+            });
+        }
+
+        function checkDialogueAnswer() {
+            const userSentence = gameState.l3SelectedWords.join(" ");
+            const expectedSentence = gameState.l3Target.expectedBlocks.join(" ");
+
+            if (userSentence === expectedSentence) {
+                playSfx('correct');
+                updateScore(25);
+                speakText(gameState.l3Target.fullSentence);
+                showToast(`Sempurna! "${gameState.l3Target.fullSentence}" 🗣️`, true);
+
+                setTimeout(() => {
+                    gameState.round++;
+                    setupLevel3Round();
+                }, 1600);
+            } else {
+                playSfx('wrong');
+                gameState.wrongAttempts++;
+                showToast("Belum tepat! Cek urutan: I + like/don't like + hobi", false);
+            }
+        }
+
+        /**
+         * 8. TAHAP REFLEKSI & PENILAIAN (RUBRIK SKOR 1-3 RPP)
+         */
+        function finishStage() {
+            playSfx('correct');
+            showScreen('reflection');
+
+            const starsEl = document.getElementById('reflection-stars');
+            const badgeText = document.getElementById('reflection-badge-text');
+
+            // Penentuan bintang sesuai indikator kemandirian di RPP
+            if (gameState.wrongAttempts <= 1 && gameState.usedHints === 0) {
+                starsEl.innerHTML = `<span>⭐</span><span>⭐</span><span>⭐</span>`;
+                badgeText.innerText = "Luar Biasa! Mandiri & Tepat (Skor 3/3)";
+            } else if (gameState.wrongAttempts <= 4) {
+                starsEl.innerHTML = `<span>⭐</span><span>⭐</span><span class="opacity-30">⭐</span>`;
+                badgeText.innerText = "Bagus Sekali! Terus Berlatih (Skor 2/3)";
+            } else {
+                starsEl.innerHTML = `<span>⭐</span><span class="opacity-30">⭐</span><span class="opacity-30">⭐</span>`;
+                badgeText.innerText = "Tetap Semangat! Ayo Coba Lagi (Skor 1/3)";
+            }
+
+            speakText("Fantastic job! Let's think about your learning!");
+        }
+
+        // Inisialisasi awal saat halaman dimuat
+        window.onload = function() {
+            initVocabPreview();
+        };
+    </script>
+</body>
+</html>
